@@ -3,19 +3,44 @@
 #include <stdlib.h>
 #include <math.h>
 
+//########################## PARAMETRY DO USTAWIENIA ############################
+//odkomentuj wybrany
 
-#define COUNT_WOLVES 10
 //#define ITER 100
-
+//#define COUNT_WOLVES 10
 //#define GENERATOR 1
-#define GENERATOR time(NULL)
 
-#define MIN_X -2
-#define MAX_X 2
-#define MIN_Y -2
-#define MAX_Y 2
+//#define MAPA 0 //od 0 do 4
 
-#define MAPA 0 //od 0 do 4
+//#define MIN_X -2
+//#define MAX_X 2
+//#define MIN_Y -2
+//#define MAX_Y 2
+//########################## KONIEC PARAMETROW ###################################
+
+
+//domyslne ustawienia parametrow jesli nie zostaly wczesniej zdefiniowane
+#ifndef COUNT_WOLVES
+    #define COUNT_WOLVES 10
+#endif
+#ifndef GENERATOR
+    #define GENERATOR time(NULL)
+#endif
+#ifndef MAPA
+    #define MAPA 0
+#endif
+#ifndef MIN_X
+    #define MIN_X -2
+#endif
+#ifndef MAX_X
+    #define MAX_X 2
+#endif
+#ifndef MIN_Y
+    #define MIN_Y -2
+#endif
+#ifndef MAX_Y
+    #define MAX_Y 2
+#endif
 
 double MODEL_A = 2;
 double A_DECR =  0.1;
@@ -161,7 +186,7 @@ int main() {
     struct Wolf wolves[COUNT_WOLVES];
     struct Best best;
     struct Map map0, map1, map2, map3, map4;
-    map0.map = calculate_sin; map0.satisfied_value = 0.9999; map0.max = 1; map0.min = -1;
+    map0.map = calculate_sin; map0.satisfied_value = 0.99999; map0.max = 1; map0.min = -1;
     map1.map = calculate_sinc; map1.min = -2.17234;
     map2.map = calculate_threeExtremum;
     map3.map = calculate_rosenbrock; map3.max = 0;
