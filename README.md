@@ -28,7 +28,7 @@ sterujemy parametrami poprzez ustawienie dyrektyw preprocesora:
 zadanej wartości mapy (blisko ekstremum) - do ustawienia *Map.satisfied_value*)  
 **COUNT_WOLVES** - liczba wilków latających po terenie (domyślnie 10)  
 **GENERATOR** - ziarno generatora losowego (domyślnie losowy)  
-**MAPA** - wybrana mapa po której latają wilki [0-4] (domyślnie 0)
+**MAPA** - wybrana mapa po której latają wilki 0-4 (domyślnie 0)
 
 zakres (x,y) do początkowego rozlosowania wilków na mapie:  
 **MIN_X** (domyślnie -2)    
