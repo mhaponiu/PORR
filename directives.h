@@ -11,7 +11,8 @@
 #define A_DECR 0.1;
 
 //########################## PARAMETRY DO USTAWIENIA ############################
-//odkomentuj wybrany
+//odkomentuj wybrany albo zrob to przez flage kompilacji np -DITER=100
+//odkomentowane tutaj dyrektywy przyslaniaja flagi kompilacji
 
 //#define ITER 100
 //#define COUNT_WOLVES 10
