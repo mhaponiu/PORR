@@ -5,7 +5,7 @@
 
 
 #define COUNT_WOLVES 10
-#define ITER 100
+//#define ITER 100
 
 //#define GENERATOR 1
 #define GENERATOR time(NULL)
@@ -161,7 +161,7 @@ int main() {
     struct Wolf wolves[COUNT_WOLVES];
     struct Best best;
     struct Map map0, map1, map2, map3, map4;
-    map0.map = calculate_sin; map0.satisfied_value = 0.999; map0.max = 1; map0.min = -1;
+    map0.map = calculate_sin; map0.satisfied_value = 0.9999; map0.max = 1; map0.min = -1;
     map1.map = calculate_sinc; map1.min = -2.17234;
     map2.map = calculate_threeExtremum;
     map3.map = calculate_rosenbrock; map3.max = 0;
@@ -185,7 +185,14 @@ int main() {
     double A;
     best = get_best(wolves);
 
-    for (int k = 0; k < ITER; ++k) {
+//    warunki zakonczenia algorytmu w zaleznosci od dyrektywy ITER
+#ifdef ITER
+    for (int k = 0; k < ITER; ) {
+#endif
+#ifndef ITER
+    int k = 0;
+    while(best.alpha.h <= maps[MAPA].satisfied_value){
+#endif
         printf("iteracja %d ", k);
         printf("Alpha h=%f wilk %d\n", best.alpha.h, best.alpha.id);
 //<<<<<<<<<<<<<<  ZROWNOLEGL MNIE  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
@@ -204,6 +211,7 @@ int main() {
             MODEL_A = 2;
         }
         best = get_best(wolves);
+        ++k;
     }
     printf("Alpha h=%f wilk %d\n", best.alpha.h, best.alpha.id);
 
