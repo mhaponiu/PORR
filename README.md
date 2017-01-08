@@ -1,5 +1,10 @@
 # PORR - Optymalizator szarego wilka (GWO)
 
 ###kompilacja
+w głównym folderze projektu należy wydać polecenie:
 
-    gcc main.c -lm
+    gcc *.c -lm
+    
+potem wiadomo:
+
+    ./a.out
