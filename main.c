@@ -43,20 +43,24 @@ double rand_from_range(double start, double end){
 
 //MAPA NR 0
 double calculate_sin(double x, double y){
+    //fale rochodzace sie na krzyz
     return sin(x*y);
 }
 //MAPA NR 1
 double calculate_sinc(double x, double y){
+    //fale rochodzace sie na krzyz
     return 10*sin(sqrt(pow(x,2)+pow(y,2))) / (sqrt(pow(x,2)+pow(y,2)));
 }
 
 //MAPA NR 2
 double calculate_threeExtremum(double x, double y){
+    // trzy gorki na srodku najwieksza
     return 1 / (1 + pow(x,2) + (y + .2 * pow(sin(10*y),2)));
 }
 
 //MAPA NR 3
 double calculate_rosenbrock(double x, double y){
+    // wulkan
     int a = 1;
     int b = 100;
     return -pow((a - x),2) - b*pow((y - pow(x,2)),2);
@@ -64,15 +68,17 @@ double calculate_rosenbrock(double x, double y){
 
 //MAPA NR 4
 double calculate_ackleys(double x, double y){
+    // bardzo duzo gorek
     return -exp(-0.2)*sqrt(pow(x,2)+pow(y,2))-3*(cos(2*x)+sin(2*y));
 }
 
-//TABLICA POWYZSZYCH FUNKCJI TERENU
-double (*math_funs[])(double, double)={calculate_sin,
-                                        calculate_sinc,
-                                        calculate_threeExtremum,
-                                        calculate_rosenbrock,
-                                        calculate_ackleys};
+struct Map{
+    double (*map)(double, double);
+    double satisfied_value;
+    double max;
+    double min;
+};
+
 
 int compare(const struct Wolf * a, const struct Wolf * b){
     if ( a->h <  b->h ) return 1;
@@ -154,6 +160,14 @@ int main() {
     srand(GENERATOR);
     struct Wolf wolves[COUNT_WOLVES];
     struct Best best;
+    struct Map map0, map1, map2, map3, map4;
+    map0.map = calculate_sin; map0.satisfied_value = 0.999; map0.max = 1; map0.min = -1;
+    map1.map = calculate_sinc; map1.min = -2.17234;
+    map2.map = calculate_threeExtremum;
+    map3.map = calculate_rosenbrock; map3.max = 0;
+    map4.map = calculate_ackleys; map4.max = 4.5901; map4.min = -44.8714;
+    struct Map maps[] = {map0, map1, map2, map3, map4};
+
 
 /*
     LOSUJE POLOZENIE WILKOW NA MAPIE
@@ -164,13 +178,12 @@ int main() {
         wolves[i].id = i;
         wolves[i].x = rand_from_range(MIN_X, MAX_X);
         wolves[i].y = rand_from_range(MIN_Y, MAX_Y);
-        wolves[i].h = math_funs[MAPA](wolves[i].x, wolves[i].y);
+        wolves[i].h = maps[MAPA].map(wolves[i].x, wolves[i].y);
         printf("Wilk %d = (%f, %f)%f\n", wolves[i].id, wolves[i].x, wolves[i].y, wolves[i].h);
     }
 
     double A;
     best = get_best(wolves);
-//    printf("Alpha h=%f wilk %d\n", best.alpha.h, best.alpha.id);
 
     for (int k = 0; k < ITER; ++k) {
         printf("iteracja %d ", k);
@@ -184,7 +197,7 @@ int main() {
             else{
                 new_position_when_not_attack(best, &wolves[j], A);
             }
-            wolves[j].h = math_funs[MAPA](wolves[j].x, wolves[j].y);
+            wolves[j].h = maps[MAPA].map(wolves[j].x, wolves[j].y);
         }
         MODEL_A = MODEL_A - A_DECR;
         if(MODEL_A < 0){
