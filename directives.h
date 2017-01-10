@@ -27,6 +27,7 @@
 
 //#define DEBUG //drukuje na stdout dodatkowe informacje
 //#define TIME //mierzy czas wykonania algorytmu
+//#define PARALLEL //uruchamia program w wielu wątkach
 //########################## KONIEC PARAMETROW ###################################
 
 

@@ -2,6 +2,7 @@
 #include <sys/time.h>
 #include <stdlib.h>
 #include <math.h>
+#include <omp.h>
 #include "wolf.h"
 #include "directives.h"
 #include "maps.h"
@@ -19,14 +20,17 @@ int main() {
     map4.map = calculate_ackleys; map4.max = 4.5901; map4.min = -44.8714;
     struct Map maps[] = {map0, map1, map2, map3, map4};
 
-
 /*
     LOSUJE POLOZENIE WILKOW NA MAPIE
 */
 #ifdef DEBUG
     printf("LOSUJE POLOZENIE WILKOW NA MAPIE\n");
 #endif
+
+#ifdef PARALLEL
+//    TODO dyrektywa openmp
 //<<<<<<<<<<<<<<  ZROWNOLEGL MNIE  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#endif
     for (int i = 0; i < COUNT_WOLVES; ++i) {
         wolves[i].id = i;
         wolves[i].x = rand_from_range(MIN_X, MAX_X);
@@ -64,7 +68,10 @@ int main() {
         printf("Alpha h=%f wilk %d\n", best.alpha.h, best.alpha.id);
 #endif;
 
+#ifdef PARALLEL
+//    TODO dyrektywa openmp
 //<<<<<<<<<<<<<<  ZROWNOLEGL MNIE  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#endif
         for (int j = 0; j < COUNT_WOLVES; ++j) {
             A = rand_from_range(-model_a, model_a);
             if(fabs(A) > 1){

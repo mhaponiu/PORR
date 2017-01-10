@@ -15,7 +15,7 @@ Wilk *alpha* to najlepszy w aktualnej iteracji (najwyżej położony)
 ### Kompilacja
 w głównym folderze projektu należy wydać polecenie:
 
-    gcc *.c -lm
+    gcc *.c -fopenmp -lm
     
 potem wiadomo:
 
@@ -37,7 +37,8 @@ zakres (x,y) do początkowego rozlosowania wilków na mapie:
 **MAX_Y** (domyślnie 2)  
 
 **DEBUG** drukuje na stdout dodatkowe informacje o przebiegu programu (domyślnie *false*)  
-**TIME** pomiar czasu wykonania algorytmu (domyślnie *false*)
+**TIME** pomiar czasu wykonania algorytmu (domyślnie *false*)  
+(do implementacji) **PARALLEL** uruchamia program równolegle w trybie z pamięcią wspólną (domyślnie *false*)
 
 żeby ustawić parametry, do wyboru mamy 2 warianty:
 - przez flagi kompilacji, przykład:
