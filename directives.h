@@ -26,6 +26,7 @@
 //#define MAX_Y 2
 
 //#define DEBUG //drukuje na stdout dodatkowe informacje
+//#define TIME //mierzy czas wykonania algorytmu
 //########################## KONIEC PARAMETROW ###################################
 
 

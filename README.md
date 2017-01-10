@@ -36,7 +36,8 @@ zakres (x,y) do początkowego rozlosowania wilków na mapie:
 **MIN_Y** (domyślnie -2)  
 **MAX_Y** (domyślnie 2)  
 
-**DEBUG** drukuje na stdout dodatkowe informacje o przebiegu programu (domyślnie *false*)
+**DEBUG** drukuje na stdout dodatkowe informacje o przebiegu programu (domyślnie *false*)  
+**TIME** pomiar czasu wykonania algorytmu (domyślnie *false*)
 
 żeby ustawić parametry, do wyboru mamy 2 warianty:
 - przez flagi kompilacji, przykład:

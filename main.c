@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <time.h>
+#include <sys/time.h>
 #include <stdlib.h>
 #include <math.h>
 #include "wolf.h"
@@ -43,6 +43,12 @@ int main() {
     double a_decr = A_DECR;
     printf("Start %d wilków\n", COUNT_WOLVES);
 
+#ifdef TIME
+    //pomiar czasu wykonania
+    struct timeval start, stop, result;
+    gettimeofday(&start, NULL);
+#endif
+
 //    warunki zakonczenia algorytmu w zaleznosci od dyrektywy ITER
 #ifdef ITER
     printf("łącznie %d iteracji\n", ITER);
@@ -56,7 +62,8 @@ int main() {
 #ifdef DEBUG
         printf("iteracja %d ", k);
         printf("Alpha h=%f wilk %d\n", best.alpha.h, best.alpha.id);
-#endif
+#endif;
+
 //<<<<<<<<<<<<<<  ZROWNOLEGL MNIE  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         for (int j = 0; j < COUNT_WOLVES; ++j) {
             A = rand_from_range(-model_a, model_a);
@@ -75,6 +82,14 @@ int main() {
         best = get_best(wolves);
         ++k;
     }
+
+#ifdef TIME
+    //pomiar czasu wykonania
+    gettimeofday(&stop, NULL);
+    timersub(&stop, &start, &result);
+    printf("wykonanie zajęło %ld.%06ld sekund\n", result);
+#endif
+
     printf("Alpha h=%f wilk %d\n", best.alpha.h, best.alpha.id);
 
     return 0;
