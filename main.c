@@ -23,31 +23,40 @@ int main() {
 /*
     LOSUJE POLOZENIE WILKOW NA MAPIE
 */
+#ifdef DEBUG
     printf("LOSUJE POLOZENIE WILKOW NA MAPIE\n");
+#endif
 //<<<<<<<<<<<<<<  ZROWNOLEGL MNIE  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
     for (int i = 0; i < COUNT_WOLVES; ++i) {
         wolves[i].id = i;
         wolves[i].x = rand_from_range(MIN_X, MAX_X);
         wolves[i].y = rand_from_range(MIN_Y, MAX_Y);
         wolves[i].h = maps[MAPA].map(wolves[i].x, wolves[i].y);
+#ifdef DEBUG
         printf("Wilk %d = (%f, %f) h= %f\n", wolves[i].id, wolves[i].x, wolves[i].y, wolves[i].h);
+#endif
     }
 
     double A;
     best = get_best(wolves);
     double model_a = MODEL_A;
     double a_decr = A_DECR;
+    printf("Start %d wilków\n", COUNT_WOLVES);
 
 //    warunki zakonczenia algorytmu w zaleznosci od dyrektywy ITER
 #ifdef ITER
+    printf("łącznie %d iteracji\n", ITER);
     for (int k = 0; k < ITER; ) {
 #endif
 #ifndef ITER
+    printf("biegają dopóki nie osiągną wartości %f\n", maps[MAPA].satisfied_value);
     int k = 0;
     while(best.alpha.h <= maps[MAPA].satisfied_value){
 #endif
+#ifdef DEBUG
         printf("iteracja %d ", k);
         printf("Alpha h=%f wilk %d\n", best.alpha.h, best.alpha.id);
+#endif
 //<<<<<<<<<<<<<<  ZROWNOLEGL MNIE  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
         for (int j = 0; j < COUNT_WOLVES; ++j) {
             A = rand_from_range(-model_a, model_a);

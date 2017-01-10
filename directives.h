@@ -24,6 +24,8 @@
 //#define MAX_X 2
 //#define MIN_Y -2
 //#define MAX_Y 2
+
+//#define DEBUG //drukuje na stdout dodatkowe informacje
 //########################## KONIEC PARAMETROW ###################################
 
 
