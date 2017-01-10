@@ -41,7 +41,7 @@ zakres (x,y) do początkowego rozlosowania wilków na mapie:
 
 **DEBUG** drukuje na stdout dodatkowe informacje o przebiegu programu (domyślnie *false*)  
 **TIME** pomiar czasu wykonania algorytmu (domyślnie *false*)  
-(do implementacji) **PARALLEL** uruchamia program równolegle w trybie z pamięcią wspólną (domyślnie *false*)
+**PARALLEL** uruchamia program równolegle w trybie z pamięcią wspólną (domyślnie *false*)  
 
 żeby ustawić parametry, do wyboru mamy 2 warianty:
 - przez flagi kompilacji, przykład:

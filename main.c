@@ -53,9 +53,13 @@ int main() {
     gettimeofday(&start, NULL);
 #endif
 
+
 //    warunki zakonczenia algorytmu w zaleznosci od dyrektywy ITER
 #ifdef ITER
-    printf("łącznie %d iteracji\n", ITER);
+        if (omp_get_thread_num() == 0) {
+            printf("łącznie %d iteracji\n", ITER);
+        }
+
     for (int k = 0; k < ITER; ) {
 #endif
 #ifndef ITER
@@ -66,29 +70,36 @@ int main() {
 #ifdef DEBUG
         printf("iteracja %d ", k);
         printf("Alpha h=%f wilk %d\n", best.alpha.h, best.alpha.id);
-#endif;
+#endif
 
 #ifdef PARALLEL
-//    TODO dyrektywa openmp
-//<<<<<<<<<<<<<<  ZROWNOLEGL MNIE  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    #pragma omp parallel
+    {
+        if (omp_get_thread_num() == 0) {
+             //TODO wykonuje sie duzo razy bo jest wewnatrz petli ITERacji -> tworzy prawdopodobnie przy każdej iteracji wątki nowe -> WOLNE
+            printf("zrównoleglam na %d wątków\n", omp_get_num_threads());}
 #endif
-        for (int j = 0; j < COUNT_WOLVES; ++j) {
-            A = rand_from_range(-model_a, model_a);
-            if(fabs(A) > 1){
-                new_position_when_attack(best, &wolves[j]);
+
+            #pragma omp for nowait
+            for (int j = 0; j < COUNT_WOLVES; ++j) {
+                A = rand_from_range(-model_a, model_a);
+                if (fabs(A) > 1) {
+                    new_position_when_attack(best, &wolves[j]);
+                } else {
+                    new_position_when_not_attack(best, &wolves[j], A);
+                }
+                wolves[j].h = maps[MAPA].map(wolves[j].x, wolves[j].y);
             }
-            else{
-                new_position_when_not_attack(best, &wolves[j], A);
+            model_a = model_a - a_decr;
+            if (model_a < 0) {
+                model_a = 2;
             }
-            wolves[j].h = maps[MAPA].map(wolves[j].x, wolves[j].y);
+            best = get_best(wolves);
+            ++k;
         }
-        model_a = model_a - a_decr;
-        if(model_a < 0){
-            model_a = 2;
-        }
-        best = get_best(wolves);
-        ++k;
+#ifdef PARALLEL
     }
+#endif
 
 #ifdef TIME
     //pomiar czasu wykonania
