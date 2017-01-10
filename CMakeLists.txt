@@ -1,5 +1,5 @@
-cmake_minimum_required(VERSION 3.6)
-#cmake_minimum_required(VERSION 3.5.1)
+#cmake_minimum_required(VERSION 3.6)
+cmake_minimum_required(VERSION 3.5.1)
 project(PORR)
 
 set(CMAKE_C_STANDARD 11)
