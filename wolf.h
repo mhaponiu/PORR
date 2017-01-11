@@ -8,7 +8,7 @@
 #endif //PORR_WOLF_H
 
 struct Wolf{
-    int id;
+    long int id;
     double x;
     double y;
     double h;

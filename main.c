@@ -19,7 +19,8 @@ int main() {
     map3.map = calculate_rosenbrock; map3.max = 0;
     map4.map = calculate_ackleys; map4.max = 4.5901; map4.min = -44.8714;
     struct Map maps[] = {map0, map1, map2, map3, map4};
-    int thr_id, i, j, k, num_threads=1;
+    int thr_id, num_threads=1;
+    long int i, j, k;
 
 /*
     LOSUJE POLOZENIE WILKOW NA MAPIE
@@ -47,8 +48,8 @@ int main() {
 #endif
 
     best = get_best(wolves);
-    double A;
     double model_a = MODEL_A;
+    double A = rand_from_range(-model_a, model_a);
     double a_decr = A_DECR;
     printf("Start %d wilków\n", COUNT_WOLVES);
 
@@ -58,8 +59,9 @@ int main() {
     gettimeofday(&start, NULL);
 #endif
     printf("łącznie %d iteracji\n", ITER);
+
 //#ifdef PARALLEL //powinien byc na wewnetrznej petli? nizej?
-//#pragma omp parallel firstprivate(a_decr) shared(model_a, best, num_threads) private(thr_id, j, j)
+//#pragma omp parallel shared(model_a, best, num_threads, A) private(k) firstprivate(a_decr)
 //    {
 //#endif
     for (k=0; k < ITER; ++k) {
@@ -67,11 +69,12 @@ int main() {
         printf("iteracja %d\n ", k);
         printf("Alpha h=%f wilk %d\n", best.alpha.h, best.alpha.id);
 #endif
+
 #ifdef PARALLEL //powinien byc na zewnetrznej petli? wyzej?
-#pragma omp parallel firstprivate(a_decr) shared(model_a, best, num_threads, A) private(thr_id, j)
+#pragma omp parallel shared(model_a, best, num_threads, A) firstprivate(a_decr)
 {
 #endif
-#pragma omp for nowait
+#pragma omp for nowait private(j)
         for (j = 0; j < COUNT_WOLVES; ++j) {
             if (omp_get_thread_num() == 0) {
                 //tylko 1 watek powinien to policzyc
@@ -111,7 +114,7 @@ int main() {
     printf("wykonanie zajęło %ld.%06ld sekund\n", result);
 #endif
     printf("program wykonywało %d wątków\n", num_threads);
-    printf("Alpha h=%f wilk %d\n", best.alpha.h, best.alpha.id);
+    printf("Alpha h=%f wilk %ld\n", best.alpha.h, best.alpha.id);
 
     return 0;
 }
