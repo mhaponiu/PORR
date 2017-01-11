@@ -36,6 +36,10 @@
     #define COUNT_WOLVES 10
 #endif
 
+#ifndef ITER
+    #define ITER 100
+#endif
+
 #ifndef GENERATOR
     #define GENERATOR time(NULL)
 #endif

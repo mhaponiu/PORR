@@ -19,6 +19,7 @@ int main() {
     map3.map = calculate_rosenbrock; map3.max = 0;
     map4.map = calculate_ackleys; map4.max = 4.5901; map4.min = -44.8714;
     struct Map maps[] = {map0, map1, map2, map3, map4};
+    int thr_id, i, j, k, num_threads=1;
 
 /*
     LOSUJE POLOZENIE WILKOW NA MAPIE
@@ -28,21 +29,25 @@ int main() {
 #endif
 
 #ifdef PARALLEL
-//    TODO dyrektywa openmp
-//<<<<<<<<<<<<<<  ZROWNOLEGL MNIE  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+#pragma omp parallel
+{
 #endif
-    for (int i = 0; i < COUNT_WOLVES; ++i) {
-        wolves[i].id = i;
-        wolves[i].x = rand_from_range(MIN_X, MAX_X);
-        wolves[i].y = rand_from_range(MIN_Y, MAX_Y);
-        wolves[i].h = maps[MAPA].map(wolves[i].x, wolves[i].y);
+#pragma omp for nowait
+    for (i = 0; i < COUNT_WOLVES; ++i) {
+        (wolves+i)->id = i;
+        (wolves+i)->x = rand_from_range(MIN_X, MAX_X);
+        (wolves+i)->y = rand_from_range(MIN_Y, MAX_Y);
+        (wolves+i)->h = maps[MAPA].map((wolves+i)->x, (wolves+i)->y);
 #ifdef DEBUG
         printf("Wilk %d = (%f, %f) h= %f\n", wolves[i].id, wolves[i].x, wolves[i].y, wolves[i].h);
 #endif
     }
+#ifdef PARALLEL
+}
+#endif
 
-    double A;
     best = get_best(wolves);
+    double A;
     double model_a = MODEL_A;
     double a_decr = A_DECR;
     printf("Start %d wilków\n", COUNT_WOLVES);
@@ -52,54 +57,52 @@ int main() {
     struct timeval start, stop, result;
     gettimeofday(&start, NULL);
 #endif
-
-
-//    warunki zakonczenia algorytmu w zaleznosci od dyrektywy ITER
-#ifdef ITER
-        if (omp_get_thread_num() == 0) {
-            printf("łącznie %d iteracji\n", ITER);
-        }
-
-    for (int k = 0; k < ITER; ) {
-#endif
-#ifndef ITER
-    printf("biegają dopóki nie osiągną wartości %f\n", maps[MAPA].satisfied_value);
-    int k = 0;
-    while(best.alpha.h <= maps[MAPA].satisfied_value){
-#endif
+    printf("łącznie %d iteracji\n", ITER);
+//#ifdef PARALLEL //powinien byc na wewnetrznej petli? nizej?
+//#pragma omp parallel firstprivate(a_decr) shared(model_a, best, num_threads) private(thr_id, j, j)
+//    {
+//#endif
+    for (k=0; k < ITER; ++k) {
 #ifdef DEBUG
-        printf("iteracja %d ", k);
+        printf("iteracja %d\n ", k);
         printf("Alpha h=%f wilk %d\n", best.alpha.h, best.alpha.id);
 #endif
-
-#ifdef PARALLEL
-    #pragma omp parallel
-    {
-        if (omp_get_thread_num() == 0) {
-             //TODO wykonuje sie duzo razy bo jest wewnatrz petli ITERacji -> tworzy prawdopodobnie przy każdej iteracji wątki nowe -> WOLNE
-            printf("zrównoleglam na %d wątków\n", omp_get_num_threads());}
+#ifdef PARALLEL //powinien byc na zewnetrznej petli? wyzej?
+#pragma omp parallel firstprivate(a_decr) shared(model_a, best, num_threads, A) private(thr_id, j)
+{
 #endif
-
-            #pragma omp for nowait
-            for (int j = 0; j < COUNT_WOLVES; ++j) {
+#pragma omp for nowait
+        for (j = 0; j < COUNT_WOLVES; ++j) {
+            if (omp_get_thread_num() == 0) {
+                //tylko 1 watek powinien to policzyc
                 A = rand_from_range(-model_a, model_a);
-                if (fabs(A) > 1) {
-                    new_position_when_attack(best, &wolves[j]);
-                } else {
-                    new_position_when_not_attack(best, &wolves[j], A);
-                }
-                wolves[j].h = maps[MAPA].map(wolves[j].x, wolves[j].y);
             }
+            if (fabs(A) > 1) {
+                new_position_when_attack(best, &wolves[j]);
+            } else {
+                new_position_when_not_attack(best, &wolves[j], A);
+            }
+                wolves[j].h = maps[MAPA].map(wolves[j].x, wolves[j].y);
+        }
+
+#ifndef ITER
+            ++k; //do while'a potrzebne
+#endif
+        if (omp_get_thread_num() == 0) {
+            //tylko 1 watek powinien to policzyc
+            num_threads = omp_get_num_threads();
             model_a = model_a - a_decr;
             if (model_a < 0) {
                 model_a = 2;
             }
             best = get_best(wolves);
-            ++k;
         }
+#pragma omp barrier
 #ifdef PARALLEL
-    }
+}
 #endif
+    } // zamyka zewnetrzną pętle
+
 
 #ifdef TIME
     //pomiar czasu wykonania
@@ -107,7 +110,7 @@ int main() {
     timersub(&stop, &start, &result);
     printf("wykonanie zajęło %ld.%06ld sekund\n", result);
 #endif
-
+    printf("program wykonywało %d wątków\n", num_threads);
     printf("Alpha h=%f wilk %d\n", best.alpha.h, best.alpha.id);
 
     return 0;
