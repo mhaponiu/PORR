@@ -17,6 +17,7 @@
 //#define ITER 100
 //#define COUNT_WOLVES 10
 //#define GENERATOR 1
+#define THREADS_COUNTER 4
 
 //#define MAPA 0 //od 0 do 4
 
@@ -25,9 +26,9 @@
 //#define MIN_Y -2
 //#define MAX_Y 2
 
-//#define DEBUG //drukuje na stdout dodatkowe informacje
+#define DEBUG //drukuje na stdout dodatkowe informacje
 //#define TIME //mierzy czas wykonania algorytmu
-//#define PARALLEL //uruchamia program w wielu wątkach
+#define PARALLEL //uruchamia program w wielu wątkach
 //########################## KONIEC PARAMETROW ###################################
 
 
@@ -58,4 +59,8 @@
 
 #ifndef MAX_Y
     #define MAX_Y 2
+#endif
+
+#ifndef THREADS_COUNTER
+    #define THREADS_COUNTER 1
 #endif

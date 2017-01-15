@@ -1,18 +1,21 @@
 #include <stdio.h>
-#include <sys/time.h>
 #include <stdlib.h>
 #include <math.h>
 #include <omp.h>
+#include <sys/time.h>
 #include "wolf.h"
 #include "directives.h"
 #include "maps.h"
 
 int main() {
+
+
     srand(GENERATOR);
-    struct Wolf wolves[COUNT_WOLVES];
+    static struct Wolf wolves[COUNT_WOLVES];
     struct Best best;
     struct Map map0, map1, map2, map3, map4;
-//    TODO poprzypisywac dla kazdej mapy przynajmniej warunki stopu -> satisfied_value
+    struct timeval arrayTimerStart, arrayTimerStop, arrayTimerResult;
+    //    TODO poprzypisywac dla kazdej mapy przynajmniej warunki stopu -> satisfied_value
     map0.map = calculate_sin; map0.satisfied_value = 0.99999; map0.max = 1; map0.min = -1;
     map1.map = calculate_sinc; map1.min = -2.17234;
     map2.map = calculate_threeExtremum;
@@ -27,19 +30,36 @@ int main() {
     printf("LOSUJE POLOZENIE WILKOW NA MAPIE\n");
 #endif
 
+#ifdef TIME
+    //pomiar czasu wstawiania
+    gettimeofday(&arrayTimerStart, NULL);
+#endif
+
 #ifdef PARALLEL
-//    TODO dyrektywa openmp
-//<<<<<<<<<<<<<<  ZROWNOLEGL MNIE  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+    #pragma omp parallel num_threads(THREADS_COUNTER) shared(wolves)
 #endif
-    for (int i = 0; i < COUNT_WOLVES; ++i) {
-        wolves[i].id = i;
-        wolves[i].x = rand_from_range(MIN_X, MAX_X);
-        wolves[i].y = rand_from_range(MIN_Y, MAX_Y);
-        wolves[i].h = maps[MAPA].map(wolves[i].x, wolves[i].y);
+    {
+#ifdef PARALLEL
+    #pragma omp for
+#endif
+        for (int i = 0; i < COUNT_WOLVES; ++i) {
+            wolves[i].id = i;
+            wolves[i].x = rand_from_range(MIN_X, MAX_X);
+            wolves[i].y = rand_from_range(MIN_Y, MAX_Y);
+            wolves[i].h = maps[MAPA].map(wolves[i].x, wolves[i].y);
 #ifdef DEBUG
-        printf("Wilk %d = (%f, %f) h= %f\n", wolves[i].id, wolves[i].x, wolves[i].y, wolves[i].h);
+            printf("Bec bec, tu watek nr %d, 2017 no witam witam bec \n",omp_get_thread_num());
+            printf("Wilk %d = (%f, %f) h= %f\n", wolves[i].id, wolves[i].x, wolves[i].y, wolves[i].h);
 #endif
-    }
+        }
+    };
+#ifdef TIME
+    //pomiar czasu wstawiania
+    gettimeofday(&arrayTimerStop, NULL);
+    timersub(&arrayTimerStop, &arrayTimerStart, &arrayTimerResult);
+    printf("Wstawianie zajęło %ld.%06ld sekund\n", arrayTimerResult);
+#endif
+
 
     double A;
     best = get_best(wolves);
@@ -69,19 +89,24 @@ int main() {
 #endif;
 
 #ifdef PARALLEL
-//    TODO dyrektywa openmp
-//<<<<<<<<<<<<<<  ZROWNOLEGL MNIE  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+        #pragma omp parallel num_threads(THREADS_COUNTER) shared(wolves)
 #endif
-        for (int j = 0; j < COUNT_WOLVES; ++j) {
-            A = rand_from_range(-model_a, model_a);
-            if(fabs(A) > 1){
-                new_position_when_attack(best, &wolves[j]);
+        {
+#ifdef PARALLEL
+            #pragma omp for
+#endif
+            for (int j = 0; j < COUNT_WOLVES; ++j) {
+                A = rand_from_range(-model_a, model_a);
+                if(fabs(A) > 1){
+                    new_position_when_attack(best, &wolves[j]);
+                }
+                else{
+                    new_position_when_not_attack(best, &wolves[j], A);
+                }
+                wolves[j].h = maps[MAPA].map(wolves[j].x, wolves[j].y);
             }
-            else{
-                new_position_when_not_attack(best, &wolves[j], A);
-            }
-            wolves[j].h = maps[MAPA].map(wolves[j].x, wolves[j].y);
-        }
+        };
+
         model_a = model_a - a_decr;
         if(model_a < 0){
             model_a = 2;
