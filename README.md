@@ -12,17 +12,14 @@ Wilk *alpha* to najlepszy w aktualnej iteracji (najwyżej położony)
 ### Sprawozdanie
 [google doc](https://docs.google.com/document/d/1tbeOzdhqqln_eS6P_Kz4HFn-MPOnzkvJtEY-77_txPc/edit?usp=sharing)
 
-### Kompilacja i uruchomienie
+### Kompilacja
 w głównym folderze projektu należy wydać polecenie:
 
     gcc *.c -fopenmp -lm
-    ./a.out
     
-albo:
+potem wiadomo:
 
-    cmake .
-    make
-    ./PORR
+    ./a.out
     
 ### Parametry
 sterujemy parametrami poprzez ustawienie dyrektyw preprocesora:

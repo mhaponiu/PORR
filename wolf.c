@@ -21,13 +21,14 @@ int compare(const struct Wolf * a, const struct Wolf * b){
     if ( a->h >  b->h ) return -1;
 }
 
-struct Best get_best(struct Wolf *wolves){
-    struct Wolf local_wolves[COUNT_WOLVES];
-    for (int i = 0; i < COUNT_WOLVES; ++i) {
+struct Best get_best(struct Wolf *wolves, int number){
+    struct Wolf *local_wolves;
+	local_wolves = (struct Wolf *)malloc(number* sizeof(struct Wolf));
+    for (int i = 0; i < number; ++i) {
         local_wolves[i] = *(wolves+i);
     }
     struct Best best;
-    qsort(local_wolves, COUNT_WOLVES, sizeof(struct Wolf), compare);
+    qsort(local_wolves, number, sizeof(struct Wolf), compare);
     best.alpha = local_wolves[0];
     best.beta = local_wolves[1];
     best.delta = local_wolves[2];

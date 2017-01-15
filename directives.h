@@ -14,8 +14,8 @@
 //odkomentuj wybrany albo zrob to przez flage kompilacji np -DITER=100
 //odkomentowane tutaj dyrektywy przyslaniaja flagi kompilacji
 
-//#define ITER 100
-//#define COUNT_WOLVES 10
+#define ITER 100
+//#define COUNT_WOLVES 30
 //#define GENERATOR 1
 
 //#define MAPA 0 //od 0 do 4
@@ -28,6 +28,7 @@
 //#define DEBUG //drukuje na stdout dodatkowe informacje
 //#define TIME //mierzy czas wykonania algorytmu
 //#define PARALLEL //uruchamia program w wielu wątkach
+//#define MPI //uruchamia w trybie MPI
 //########################## KONIEC PARAMETROW ###################################
 
 

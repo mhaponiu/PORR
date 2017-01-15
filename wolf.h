@@ -20,7 +20,7 @@ struct Best{
     struct Wolf delta;
 };
 
-struct Best get_best(struct Wolf *wolves);
+struct Best get_best(struct Wolf *wolves, int number);
 
 int compare(const struct Wolf * a, const struct Wolf * b);
 

@@ -7,7 +7,11 @@
 
 #endif //PORR_MAPS_H
 
-
+/*
+@satisfied_value: warunek stopu; wartosc, dla ktorej wilki moga juz przestac szukac dalej
+@max: faktyczna wartosc funkcji w maksimum; przydatne do testow
+@min: faktyczna wartosc funkcji w minimum; przydatne do testow
+*/
 struct Map{
     double (*map)(double, double);
     double satisfied_value;
