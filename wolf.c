@@ -30,6 +30,28 @@ struct Best get_best(struct Wolf *wolves){
     return best;
 }
 
+struct Best get_best_linear(struct Wolf *wolves) {
+    struct Wolf zeroWolf;
+    struct Best best;
+
+    zeroWolf.h = 0;
+    best.alpha = zeroWolf;
+    best.beta = zeroWolf;
+    best.delta = zeroWolf;
+
+    for(int i = 0; i < COUNT_WOLVES; ++i) {
+        if (wolves[i].h > best.alpha.h) {
+            best.alpha = wolves[i];
+        } else if (wolves[i].h > best.beta.h) {
+            best.beta = wolves[i];
+        } else if (wolves[i].h > best.delta.h) {
+            best.delta = wolves[i];
+        }
+    }
+
+    return best;
+}
+
 void new_position_when_attack(struct Best best, struct Wolf *wolf){
     double c1, c2, c3, da, db, dd, A1, A2, A3, x1, x2, x3, y1, y2, y3, model_a;
     model_a = MODEL_A

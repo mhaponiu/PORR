@@ -93,26 +93,26 @@ int main() {
 #endif
         {
 #ifdef PARALLEL
-            #pragma omp for
+#pragma omp for schedule(static)
 #endif
             for (int j = 0; j < COUNT_WOLVES; ++j) {
                 A = rand_from_range(-model_a, model_a);
-                if(fabs(A) > 1){
+                if (fabs(A) > 1) {
                     new_position_when_attack(best, &wolves[j]);
-                }
-                else{
+                } else {
                     new_position_when_not_attack(best, &wolves[j], A);
                 }
                 wolves[j].h = maps[MAPA].map(wolves[j].x, wolves[j].y);
             }
-        };
 
-        model_a = model_a - a_decr;
-        if(model_a < 0){
-            model_a = 2;
+
+            model_a = model_a - a_decr;
+            if (model_a < 0) {
+                model_a = 2;
+            }
+            best = get_best_linear(wolves);
+            ++k;
         }
-        best = get_best(wolves);
-        ++k;
     }
 
 #ifdef TIME

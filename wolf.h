@@ -22,6 +22,8 @@ struct Best{
 
 struct Best get_best(struct Wolf *wolves);
 
+struct Best get_best_linear(struct Wolf *wolves);
+
 int compare(const struct Wolf * a, const struct Wolf * b);
 
 void new_position_when_attack(struct Best best, struct Wolf *wolf);
