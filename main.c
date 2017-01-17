@@ -9,8 +9,6 @@
 
 int main() {
 
-
-    srand(GENERATOR);
     static struct Wolf wolves[COUNT_WOLVES];
     struct Best best;
     struct Map map0, map1, map2, map3, map4;

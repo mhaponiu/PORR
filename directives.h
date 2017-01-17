@@ -16,11 +16,10 @@
 //odkomentowane tutaj dyrektywy przyslaniaja flagi kompilacji
 
 #define ITER 50
-#define COUNT_WOLVES 10
+#define COUNT_WOLVES 10000000
 //#define GENERATOR 1
-#define THREADS_COUNTER 1
-
-#define MAPA 4 //od 0 do 4
+#define THREADS_COUNTER 2
+#define MAPA 3 //od 0 do 4
 
 //#define MIN_X -2
 //#define MAX_X 2

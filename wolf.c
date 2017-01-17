@@ -4,13 +4,20 @@
 
 #include <stdlib.h>
 #include <math.h>
+#include <omp.h>
 #include "wolf.h"
 #include "directives.h"
 
 
 double rand_from_range(double start, double end){
     double diff = fabs(end - start);
+#ifdef PARALLEL
+    unsigned seed = 15234 + 17 * omp_get_thread_num();
+    double r = rand_r(&seed)%((int)(diff*100));
+#endif
+#ifndef  PARALLEL
     double r = rand()%((int)(diff*100));
+#endif
     r = r / 100;
     return start + r;
 }
