@@ -15,7 +15,6 @@ int main() {
     struct Best best;
     struct Map map0, map1, map2, map3, map4;
     struct timeval arrayTimerStart, arrayTimerStop, arrayTimerResult;
-    //    TODO poprzypisywac dla kazdej mapy przynajmniej warunki stopu -> satisfied_value
     map0.map = calculate_sin; map0.satisfied_value = 0.99999; map0.max = 1; map0.min = -1;
     map1.map = calculate_sinc; map1.min = -2.17234;
     map2.map = calculate_threeExtremum;
@@ -62,7 +61,7 @@ int main() {
 
 
     double A;
-    best = get_best(wolves);
+    best = get_best_linear(wolves);
     double model_a = MODEL_A;
     double a_decr = A_DECR;
     printf("Start %d wilków\n", COUNT_WOLVES);
@@ -93,7 +92,7 @@ int main() {
 #endif
         {
 #ifdef PARALLEL
-#pragma omp for schedule(static)
+            #pragma omp for schedule(static)
 #endif
             for (int j = 0; j < COUNT_WOLVES; ++j) {
                 A = rand_from_range(-model_a, model_a);
@@ -105,14 +104,13 @@ int main() {
                 wolves[j].h = maps[MAPA].map(wolves[j].x, wolves[j].y);
             }
 
-
+        }
             model_a = model_a - a_decr;
             if (model_a < 0) {
                 model_a = 2;
             }
             best = get_best_linear(wolves);
             ++k;
-        }
     }
 
 #ifdef TIME

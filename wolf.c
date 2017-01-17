@@ -15,21 +15,6 @@ double rand_from_range(double start, double end){
     return start + r;
 }
 
-int compare(const struct Wolf * a, const struct Wolf * b){
-    if ( a->h <  b->h ) return 1;
-    if ( a->h == b->h ) return 0;
-    if ( a->h >  b->h ) return -1;
-}
-
-struct Best get_best(struct Wolf *wolves){
-    struct Best best;
-    qsort(wolves, COUNT_WOLVES, sizeof(struct Wolf), compare);
-    best.alpha = wolves[0];
-    best.beta = wolves[1];
-    best.delta = wolves[2];
-    return best;
-}
-
 struct Best get_best_linear(struct Wolf *wolves) {
     struct Wolf zeroWolf;
     struct Best best;

@@ -1,6 +1,7 @@
 //
 // Created by mhaponiu on 08.01.17.
 //
+#include <time.h>
 
 #ifndef PORR_DIRECTIVES_H
 #define PORR_DIRECTIVES_H
@@ -15,11 +16,11 @@
 //odkomentowane tutaj dyrektywy przyslaniaja flagi kompilacji
 
 #define ITER 50
-#define COUNT_WOLVES 10000000
+#define COUNT_WOLVES 10
 //#define GENERATOR 1
-#define THREADS_COUNTER 10
+#define THREADS_COUNTER 1
 
-//#define MAPA 0 //od 0 do 4
+#define MAPA 4 //od 0 do 4
 
 //#define MIN_X -2
 //#define MAX_X 2
